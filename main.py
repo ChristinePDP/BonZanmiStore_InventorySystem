@@ -12,10 +12,6 @@ import random  # Import the random module for generating random numbers (used in
 
 import pymysql  # Import pymysql to connect and interact with MySQL databases
 
-import csv  # Import csv module for reading and writing CSV files (not currently used in the provided code)
-
-import numpy as np  # Import numpy for numerical operations (not currently used in the provided code)
-
 from tkinter import StringVar  # Import StringVar class to create string variables that can be used with tkinter widgets
 
 from tkcalendar import DateEntry  # Import DateEntry from tkcalendar for a calendar widget (not currently used in the provided code)
