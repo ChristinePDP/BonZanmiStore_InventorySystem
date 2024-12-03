@@ -1,70 +1,83 @@
-# Importing necessary libraries for the application
+# Import necessary libraries
 
-from tkinter import *  # Importing all classes and functions from the tkinter module in order to create the GUI applications
+from tkinter import *  # Import all classes and functions from the tkinter module for creating GUI applications
 
-from tkinter import ttk  # Importing the themed tkinter module for advanced widgets like Treeview, Combobox, etc.
+from tkinter import ttk  # Import the themed tkinter module for advanced widgets like Treeview, Combobox, etc.
 
-from tkinter import messagebox  # Import messagebox for displaying dialog boxes.
+from tkinter import messagebox  # Import messagebox for displaying dialog boxes (like warnings and info)
 
-import random  # Importing the random module in order to generate random numbers.
+import tkinter  # Import the tkinter module (not necessary since we imported everything above, but can be useful for additional functionalities)
 
-import pymysql  # Importing pymysql to connect and interact with MySQL databases
+import random  # Import the random module for generating random numbers (used in generating random item IDs)
 
-from tkinter import StringVar  # Importing StringVar class to create string variables that can be used with tkinter widgets
+import pymysql  # Import pymysql to connect and interact with MySQL databases
 
-from tkcalendar import DateEntry  # Importing DateEntry from tkcalendar for a calendar widget. 
+from PIL import Image, ImageTk # Import Image and ImageTk from Pillow
 
-# This function use to create the main application window
+# Create the main application window
 
 window = tkinter.Tk()
 
 window.title("Bon-Zanmi Store Inventory System")
 
-# The function use to toggle the fullscreen mode
+
+# Function to toggle fullscreen mode
 
 def toggle_fullscreen(event=None):
 
     window.attributes('-fullscreen', True)
 
-# This function use to exit fullscreen mode
+# Function to exit fullscreen mode
 
 def end_fullscreen(event=None):
 
     window.attributes('-fullscreen', False)
 
-# This function use to configure the main window's background color
+# Configure the main window's background color
 
 window.configure(bg="#DDA0DD")
 
-# The fuction is use in order to start the window in a maximized state
+# Load an image function
+def load_image(path):
+    image = Image.open(path)
+    return ImageTk.PhotoImage(image)
+
+# Load images after the window is created
+logo_image = load_image("C:/Users/Chris/Downloads/gD8mSS-H-removebg-preview.png")
+
+# Start the window in a maximized state
 
 window.state('zoomed')
 
-# The function is use in order to initialize frames
+# Initialize frames
 
 welcome_frame = Frame(window, bg="pink")
 
 inventory_frame = Frame(window, bg="#DDA0DD")
 
-# The function is use to show the inventory frame and hide the welcome frame
+# Adding the logo to the welcome frame
+logo_label = Label(welcome_frame, image=logo_image, bg="pink")
+logo_label.pack(pady=100)
+
+# Function to show the inventory frame and hide the welcome frame
 
 def show_inventory():
 
-    welcome_frame.pack_forget()  # This function use to hide the welcome frame
+    welcome_frame.pack_forget()  # Hide the welcome frame
 
-    inventory_frame.pack(fill=BOTH, expand=True)  # This function use to show the inventory frame
+    inventory_frame.pack(fill=BOTH, expand=True)  # Show the inventory frame
 
     refreshTable() 
 
-# This button use to enter the inventory system at the bottom
+# Button to enter the inventory system at the bottom
 
-enter_button = Button(welcome_frame, text="Enter Inventory System", font=("Helvetica", 16), command=show_inventory, background="#FF1493", foreground="BLACK")
+enter_button = Button(welcome_frame, text="Enter Inventory System", font=("Helvetica", 16), command=show_inventory, background="#DDA0DD", foreground="BLACK")
 
-enter_button.pack(side=BOTTOM, padx=0, pady= 10) 
+enter_button.pack(side=BOTTOM, padx=0, pady= 100)  # Pack the button at the bottom
 
 window.bind('<Return>', lambda event: show_inventory())
 
-# This funtion below indicate the Welcome Page
+# Welcome Page
 
 welcome_label = Label(welcome_frame, text="Welcome to Bon-Zanmi Inventory System!", font=("Times new roman", 30), bg="pink")
 
@@ -79,15 +92,15 @@ my_tree = ttk.Treeview(window,show = 'headings',height = 20)
 
 style=ttk.Style()
 
-# This function of Array use to hold placeholder text for entry fields
+# Array to hold placeholder text for entry fields
 placeholderArray = [tkinter.StringVar() for _ in range(7)]
 
-# This function use to define numeric and alphabetic characters for ID generation
+# Define numeric and alphabetic characters for ID generation
 numeric='1234567890'
 
 alpha='ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-# This function use to handle click event on entry fields
+# Function to handle click event on entry fields
 def on_entry_click(event):
 
     if event.widget.get() == 'YYYY-MM-DD':
@@ -96,7 +109,7 @@ def on_entry_click(event):
 
         event.widget.config(fg='black')  
 
-# This function use to handle focus out event on entry fields
+# Function to handle focus out event on entry fields
 def on_focusout(event):
 
     if event.widget.get() == '':
@@ -105,7 +118,7 @@ def on_focusout(event):
 
         event.widget.config(fg='black') 
 
-# This function use to establish a connection to the MySQL database       
+# Function to establish a connection to the MySQL database       
 def connection():
 
     conn = pymysql.connect(
@@ -120,17 +133,18 @@ def connection():
     )
     return conn
 
-# The function below use to establish database connection
+# Establish database connection
 conn = connection()
 
 cursor = conn.cursor()
 
-# This function use to initialize placeholder variables for entry fields
+
+# Initialize placeholder variables for entry fields
 for i in range(0,5):
 
     placeholderArray[i] = tkinter.StringVar()
 
-# This function use to read data from the database
+# Function to read data from the database
 def read():
 
     cursor.connection.ping()
@@ -145,7 +159,7 @@ def read():
 
     return results 
 
-# This function use to refresh the data displayed in the Treeview
+# Function to refresh the data displayed in the Treeview
 def refreshTable():
 
     for data in my_tree.get_children():
@@ -154,7 +168,7 @@ def refreshTable():
 
     for array in read():
 
-        item_quantity = int(array[4])  # We can assume that the quantity is the 5th element in the array
+        item_quantity = int(array[4])  # Assuming quantity is the 5th element in the array
 
         if item_quantity <= 0 :
 
@@ -164,13 +178,13 @@ def refreshTable():
 
             my_tree.insert(parent='', index='end', id=array, text="", values=(array), tag="orow")
 
-    my_tree.tag_configure('orow', background='#FFC0CB')
+    my_tree.tag_configure('orow', background='#FFC0CB')  # Normal items
 
-    my_tree.tag_configure('OutOfStock', background="lavender", foreground = "black")  # This indicate the out of stock items
+    my_tree.tag_configure('OutOfStock', background="lavender", foreground = "black")  # Out of stock items
     
     my_tree.pack()
 
-# This function use to set placeholder text in entry fields
+# Function to set placeholder text in entry fields
 
 def setph(word,num):
 
@@ -180,7 +194,7 @@ def setph(word,num):
 
             placeholder[ph].set(word)
 
-# This function use to generate a random item ID
+# Function to generate a random item ID
 
 def generateRand():
 
@@ -200,7 +214,7 @@ def generateRand():
 
     setph(itemId, 0)
 
-# This function use to save new item data to the database
+# Function to save new item data to the database
 def save():
 
     itemId = str(itemIdEntry.get())
@@ -219,14 +233,14 @@ def save():
 
     valid = True
 
-    # This will check if all fields are filled
+    # Check if all fields are filled
     if not (itemId and itemId.strip()) or not (name and name.strip()) or not (packaging_size and packaging_size.strip()) or not (price and price.strip()) or not (qnt and qnt.strip()) or not (cat and cat.strip()) or not (expiration_date and expiration_date.strip()):
 
         messagebox.showwarning("", "Please fill up all entries")
 
         return
 
-    # This function is for validating Item Id format
+    # Validate Item Id format
     if len(itemId) < 5 or not (itemId[3] == '-'):
 
         messagebox.showwarning("", "Invalid Item Id")
@@ -254,7 +268,7 @@ def save():
     try:
         cursor.connection.ping()
 
-        # This will check if item_id or name already exists in the database
+        # Check if item_id or name already exists in the database
         cursor.execute("SELECT * FROM stocks WHERE `item_id` = %s OR `name` = %s", (itemId, name))
 
         existing_item = cursor.fetchall()
@@ -265,14 +279,14 @@ def save():
 
             return
 
-        # This will insert new item into the database
+        # Insert new item into the database
         sql = f"INSERT INTO stocks (`item_id`, `name`, `packaging_size`, `price`, `quantity`, `category`, `expiration_date`) VALUES ('{itemId}', '{name}', '{packaging_size}', '{price}', '{qnt}', '{cat}', '{expiration_date}')"
 
         cursor.execute(sql)
 
         conn.commit()
 
-        # This will refresh the table
+        # Refresh the table
 
         refreshTable()
 
@@ -283,7 +297,7 @@ def save():
         messagebox.showwarning("", f"Error while saving: {str(e)}")
 
 
-# This function use to update item data to the database
+# Function to update item data to the database
 def update():
 
     try:
@@ -312,14 +326,14 @@ def update():
 
     expiration_date = str(expirationDateEntry.get())
 
-    # This will check if all fields are filled
+    # Check if all fields are filled
     if not (itemId and itemId.strip()) or not (name and name.strip()) or not (packaging_size and packaging_size.strip()) or not (price and price.strip()) or not (qnt and qnt.strip()) or not (cat and cat.strip()) or not (expiration_date and expiration_date.strip()):
 
         messagebox.showwarning("", "Please fill up all entries")
 
         return
 
-    # This will check if the selected item ID is being changed (which should not happen)
+    # Check if the selected item ID is being changed (which should not happen)
     if selectedItemId != itemId:
 
         messagebox.showwarning("", "You can't change Item ID.")
@@ -329,7 +343,7 @@ def update():
     try:
         cursor.connection.ping()
 
-        # This will check if the new name or item_id already exists in the database
+        # Check if the new name or item_id already exists in the database
 
         cursor.execute("SELECT * FROM stocks WHERE (`item_id` = %s OR `name` = %s) AND `item_id` != %s", (itemId, name, selectedItemId))
 
@@ -341,14 +355,14 @@ def update():
 
             return
 
-        # This will update the item in the database
+        # Update the item in the database
         sql = f"UPDATE stocks SET name='{name}', packaging_size='{packaging_size}', price='{price}', quantity='{qnt}', category='{cat}', expiration_date='{expiration_date}' WHERE item_id='{selectedItemId}'"
 
         cursor.execute(sql)
 
         conn.commit()
 
-        # This wll refresh the table and clear the form
+        # Refresh the table and clear the form
         messagebox.showinfo("", "Data has been successfully updated.")
 
         clear()
@@ -360,7 +374,7 @@ def update():
         messagebox.showwarning("", f"Error occurred while updating: {str(e)}")
 
 
-# This function will delete item data to the database
+# Function to delete item data to the database
 def delete():
 
     try:
@@ -403,7 +417,7 @@ def delete():
 
         messagebox.showwarning("","Please select a data row")
 
-# This function use to select item data to the database
+# Function to select item data to the database
 def select():
 
     try:
@@ -446,7 +460,7 @@ def select():
 
         messagebox.showwarning("", "An error occurred: " + str(e))
 
-# This function use to find item data to the database
+# Function to find item data to the database
 
 def find():
 
@@ -525,30 +539,30 @@ def find():
 
 def clear():
 
-    # This will clear all the placeholder entries by setting them to empty strings
+    # Clears all the placeholder entries by setting them to empty strings
     for num in range(0, 7):
 
-        setph('', (num))  # This will calls setph to clear the value in each placeholder
+        setph('', (num))  # Calls setph to clear the value in each placeholder
 
-# This is for left frame for form inputs
-left_frame = Frame(window, bg="#FF69B4", width=100) 
+# Left Frame for form inputs
+left_frame = Frame(window, bg="#FF69B4")
 
-left_frame.pack(side=LEFT, fill=Y, padx=(10, 0), pady=10) 
+left_frame.pack(side=LEFT, fill=Y, padx=(20, 0), pady=20)
 
-# This is for color for buttons
+# Color for buttons
 btnColor = "#EE82EE"
 
-# This is for right frame for other content (e.g., tree view, tables)
-right_frame = Frame(window, width=100) 
+# Right Frame for other content (e.g., tree view, tables)
+right_frame = Frame(window)
 
-right_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=(0, 10), pady=10) 
+right_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=(0, 20), pady=20)
 
-# This is for labelFrame for the input form fields
+# LabelFrame for the input form fields
 entriesFrame = LabelFrame(left_frame, text="Stock Management System", borderwidth=5)
 
 entriesFrame.pack(fill=X, pady= 10, padx=10)
 
-# This is for labels for each form field
+# Labels for each form field
 itemIdLabel = Label(entriesFrame, text="ITEM ID", anchor="e", width=10)
 
 itemIdLabel.grid(row=0, column=0, padx=20)
@@ -577,15 +591,34 @@ expirationDateLabel = Label(entriesFrame, text="EXPIRATION DATE", anchor="e", wi
 
 expirationDateLabel.grid(row=6, column=0, padx=20)
 
-# This is for label to show date format instruction
+# Label to show date format instruction
 expirationFormatLabel = Label(entriesFrame, text="Format: YYYY-MM-DD", anchor="w", fg='black')
 
 expirationFormatLabel.grid(row=7, column=2, padx=5, pady=5)
 
-# This is for category options for the combobox
-categoryArray = ['Instant Noodles', 'Canned Goods', 'Candy', 'Soda', 'Detergent', 'Rice', 'Coffee', 'Shampoo', 'Conditioner', 'Toothpaste', 'Medicine', 'Snacks', 'Diapers', 'Cigarettes']
+categoryArray = [
+    'Instant Noodles',
+    'Canned Goods',
+    'Candy',
+    'Soda',
+    'Snacks',
+    'Frozen Foods',
+    'Dairy Products',
+    'Bread',
+    'Condiments',
+    'Spices and Seasonings',
+    'Dried Fruits',
+    'Nuts',
+    'Baby Food',
+    'Pet Food',
+    'Medicine',
+    'Shampoo',
+    'Conditioner',
+    'Toothpaste',
+    'Soap'
+]
 
-# This is for entries for each form field, using placeholders
+# Entries for each form field, using placeholders
 itemIdEntry = Entry(entriesFrame, width=50, textvariable=placeholderArray[0])
 
 itemIdEntry.grid(row=0, column=2, padx=10, pady=30)
@@ -606,30 +639,30 @@ qntEntry = Entry(entriesFrame, width=50, textvariable=placeholderArray[4])
 
 qntEntry.grid(row=4, column=2, padx=10, pady=30)
 
-# This is for category dropdown combo box
+# Category dropdown combo box
 categoryCombo = ttk.Combobox(entriesFrame, width=47, textvariable=placeholderArray[5], values=categoryArray)
 
 categoryCombo.grid(row=5, column=2, padx=10, pady=30)
 
-# This is for expiration date entry with placeholder text
+# Expiration date entry with placeholder text
 expirationDateEntry = Entry(entriesFrame, width=50, textvariable=placeholderArray[6])
 
-expirationDateEntry.insert(0, 'YYYY-MM-DD')  # This is the default text for expiration date
+expirationDateEntry.insert(0, 'YYYY-MM-DD')  # Default text for expiration date
 
-expirationDateEntry.bind("<FocusIn>", on_entry_click)  # This is use in order to focus in event handler for placeholder
+expirationDateEntry.bind("<FocusIn>", on_entry_click)  # Focus in event handler for placeholder
 
-expirationDateEntry.bind("<FocusOut>", on_focusout)  # his is use in order to focus out event handler to revert placeholder
+expirationDateEntry.bind("<FocusOut>", on_focusout)  # Focus out event handler to revert placeholder
 
 expirationDateEntry.config(fg='black') 
 
 expirationDateEntry.grid(row=6, column=2, padx=10, pady=30)
 
-# This is use to manage Frame for action buttons (Save, Update, Delete, etc.)
+# Manage Frame for action buttons (Save, Update, Delete, etc.)
 manageFrame = LabelFrame(left_frame, text="Manage", borderwidth=5)
 
 manageFrame.pack(fill=X, padx=10, pady=10)
 
-# This is the buttons for various actions
+# Buttons for various actions
 saveBtn = Button(manageFrame, text="SAVE", width=10, borderwidth=3, bg=btnColor, fg='bLACK', command=save)
 
 updateBtn = Button(manageFrame, text="UPDATE", width=10, borderwidth=3, bg=btnColor, fg='bLACK', command=update)
@@ -642,7 +675,7 @@ findBtn = Button(manageFrame, text="FIND", width=10, borderwidth=3, bg=btnColor,
 
 clearBtn = Button(manageFrame, text="CLEAR", width=10, borderwidth=3, bg=btnColor, fg='bLACK', command=clear)
 
-# This is use in order to position buttons in the grid layout
+# Positioning buttons in the grid layout
 saveBtn.grid(row=0, column=0, padx=5, pady=5)
 
 updateBtn.grid(row=0, column=1, padx=5, pady=5)
@@ -655,7 +688,7 @@ findBtn.grid(row=0, column=4, padx=5, pady=5)
 
 clearBtn.grid(row=0, column=5, padx=5, pady=5)
 
-# This is for keyboard shortcuts for button actions
+# Keyboard shortcuts for button actions
 window.bind('<Control-s>', lambda event: save())  # Save action
 
 window.bind('<Control-u>', lambda event: update())  # Update action
@@ -668,12 +701,12 @@ window.bind('<Control-f>', lambda event: find())  # Find action
 
 window.bind('<Control-c>', lambda event: clear())  # Clear action
 
-# This for button to generate random item ID
+# Button to generate random item ID
 generateIdBtn = Button(entriesFrame, text="GENERATE ID", borderwidth=3, bg=btnColor, fg='BLACK', command=generateRand)
 
 generateIdBtn.grid(row=0, column=3, padx=5, pady=5)
 
-# This is use to apply styles to Treeview widget
+# Apply styles to Treeview widget
 style = ttk.Style()
 
 style.configure("Treeview.Heading", font=("Helvetica", 13, "bold"), background="FF1493")
@@ -684,7 +717,7 @@ style.configure("OutOfStock", background="#FFB6C1")
 
 my_tree = ttk.Treeview(right_frame, show='headings', height=60)
 
-# This is use to setting up the Treeview columns and their properties
+# Setting up the Treeview columns and their properties
 my_tree['columns'] = ("Item Id", "Name", "Pckgng Size", "Price", "Qnt Stocks", "Category", "Exp Date")
 
 # Treeview column configurations
@@ -724,7 +757,7 @@ my_tree.tag_configure('orow', background="#C71585")
 
 my_tree.pack(fill=BOTH, expand=True)
 
-# This is use for function to set placeholder text for the form fields
+# Function to set placeholder text for the form fields
 def setph(word, num):
 
     for ph in range(0, 7):
@@ -735,19 +768,20 @@ def setph(word, num):
 
 def exit_application():
     if messagebox.askyesno("Confirm Exit", "Do you really want to exit?"):
+
         window.destroy()  # This will close the Tkinter window
 
-# This is the exit Button
+# Exit Button
 exit_button = Button(left_frame, text="Exit", font=("Helvetica", 16), width=10, borderwidth=3, bg=btnColor, fg='bLACK', command=exit_application)
 
-exit_button.pack(side=BOTTOM, padx=10, pady=10)  
+exit_button.pack(side=BOTTOM, padx=10, pady=10)  # Pack the button at the bottom
 
 window.bind('<Escape>', lambda event: exit_application())
 
-# Used in order to refresh the data in the table.
+# Refresh the data in the table (not defined here)
 refreshTable()
 
-# This makes the window non-resizable
+# Make the window non-resizable
 window.resizable(False, False)
 
 # Start the main loop for the Tkinter window
