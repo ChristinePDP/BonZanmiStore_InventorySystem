@@ -58,9 +58,9 @@ def show_inventory():
 
 # This button use to enter the inventory system at the bottom
 
-enter_button = Button(welcome_frame, text="Enter Inventory System", font=("Helvetica", 16), command=show_inventory)
+enter_button = Button(welcome_frame, text="Enter Inventory System", font=("Helvetica", 16), command=show_inventory, background="#FF1493", foreground="BLACK")
 
-enter_button.pack(side=BOTTOM, padx=0, pady= 10)  l
+enter_button.pack(side=BOTTOM, padx=0, pady= 10) 
 
 window.bind('<Return>', lambda event: show_inventory())
 
