@@ -7,8 +7,8 @@ The Bon-Zanmi Store Inventory System is a Python-based graphical user interface 
 ## II. Explanation of Python Concepts and Libraries Applied
 
 ### Python Concepts
-- Object-Oriented Programming (OOP): This application is structured using functions that encapsulate specific functionalities which promotes code reusability and organization.
 - Error Handling: The application includes error handling mechanisms using try-except blocks to manage exceptions that may arise during database operations or user input.
+- Modularity: The code is organized into functions, making it easier to maintain and extend.
 
 ### Libraries Used
 - Tkinter: A standard GUI toolkit for Python, Tkinter is used to create the graphical interface of the application, allowing users to interact with the inventory system easily.
