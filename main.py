@@ -534,17 +534,17 @@ def clear():
         setph('', (num))  # Calls setph to clear the value in each placeholder
 
 # Left Frame for form inputs
-left_frame = Frame(window, bg="#FF69B4")
+left_frame = Frame(window, bg="#FF69B4", width=100) 
 
-left_frame.pack(side=LEFT, fill=Y, padx=(20, 0), pady=20)
+left_frame.pack(side=LEFT, fill=Y, padx=(10, 0), pady=10) 
 
 # Color for buttons
 btnColor = "#EE82EE"
 
 # Right Frame for other content (e.g., tree view, tables)
-right_frame = Frame(window)
+right_frame = Frame(window, width=100) 
 
-right_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=(0, 20), pady=20)
+right_frame.pack(side=RIGHT, fill=BOTH, expand=True, padx=(0, 10), pady=10) 
 
 # LabelFrame for the input form fields
 entriesFrame = LabelFrame(left_frame, text="Stock Management System", borderwidth=5)
