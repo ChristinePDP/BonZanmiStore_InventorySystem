@@ -43,7 +43,7 @@ def load_image(path):
     return ImageTk.PhotoImage(image)
 
 # Load images after the window is created
-logo_image = load_image("C:/Users/Chris/Downloads/gD8mSS-H-removebg-preview.png")
+logo_image = load_image("c:/Users/Chris/Downloads/Green_and_Yellow_Illustrative_Sari-Sari_Store_Signage_Poster-removebg-preview.png")
 
 # Start the window in a maximized state
 
@@ -57,7 +57,7 @@ inventory_frame = Frame(window, bg="#DDA0DD")
 
 # Adding the logo to the welcome frame
 logo_label = Label(welcome_frame, image=logo_image, bg="pink")
-logo_label.pack(pady=100)
+logo_label.pack(pady=5)
 
 # Function to show the inventory frame and hide the welcome frame
 
